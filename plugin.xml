@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<editor
+      name="Vue SFC Editor"
+      class="org.vuejs.vue4e.editor.VueSfcEditor"
+      id="org.vuejs.vue4e.editor.VueSfcEditor">
+   </editor>
+   <!-- extension
+	  point="org.eclipse.core.filebuffers.documentSetup"
+	  id="org.vuejs.vue4e.editor.VueSfcSetupParticipant"
+	  name="VueSfcSetupParticipantName">
+	  <participant
+		contentTypeId="lng.vue"
+		class="org.vuejs.vue4e.editor.VueSfcSetupParticipant">
+	</participant>
+   </extension -->
+
+  <!-- define base type as in tm4e.langpack -->
+  <extension point="org.eclipse.core.contenttype.contentTypes">
+    <content-type id="org.eclipse.tm4e.language_pack.basetype"
+      base-type="org.eclipse.core.runtime.text"
+      name="Text (Syntax Highlighting)"
+      priority="low"/>
+  </extension>
+  <extension point="org.eclipse.ui.editors">
+    <editorContentTypeBinding
+      contentTypeId="org.eclipse.tm4e.language_pack.basetype"
+      editorId="org.eclipse.ui.genericeditor.GenericEditor"/>
+  </extension>   
+   
+   <extension point="org.eclipse.core.contenttype.contentTypes">
+       <content-type id="lng.vue" name="Vue Single File Component" base-type="org.eclipse.tm4e.language_pack.basetype" file-extensions="vue" />
+   </extension>
+   <!-- extension point="org.eclipse.ui.editors">
+       <editorContentTypeBinding
+       	 contentTypeId="lng.vue"
+       	 editorId="org.vuejs.vue4e.editor.VueSfcEditor">
+       </editorContentTypeBinding>
+   </extension -->
+   <extension point="org.eclipse.tm4e.registry.grammars">
+      <!-- NOTE: last one takes precendence -->
+      <!-- building on types from org.eclipse.wildwebdeveloper or org.eclipse.tm4e.samples -->
+      <grammar scopeName="source.vue" path="resources/syntaxes/vue-www.tmLanguage.json" />
+      <scopeNameContentTypeBinding contentTypeId="lng.vue" scopeName="source.vue" />
+      <!-- alternative building on types from org.eclipse.tm4e.language_pack -->
+      <grammar scopeName="lngpck.source.vue" path="resources/syntaxes/vue-lngpck.tmLanguage.json" />
+      <scopeNameContentTypeBinding contentTypeId="lng.vue" scopeName="lngpck.source.vue" />
+   </extension>
+   <extension point="org.eclipse.tm4e.languageconfiguration.languageConfigurations">
+      <languageConfiguration contentTypeId="lng.vue" path="resources/languages/vue-language-configuration.json"/>
+   </extension>
+   <extension point="org.eclipse.lsp4e.languageServer">
+      <server id="org.vuejs.vls" label="Vue language server" class="org.vuejs.vue4e.vls.ConnectionProvider" />
+      <contentTypeMapping id="org.vuejs.vls" contentType="lng.vue"/>   
+   </extension>
+   <extension
+         id="org.vuejs.vue4e.VLSCommandHandler"
+         class="org.vuejs.vue4e.VLSCommandHandler"
+         point="org.eclipse.ui.handlers">
+   </extension>
+
+</plugin>
