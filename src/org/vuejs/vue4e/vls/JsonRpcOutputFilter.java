@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.util.stream.Collectors;
 
 import org.json.*;
+import org.vuejs.vue4e.Vue4ePlugin;
 
 
 /**
@@ -22,8 +23,9 @@ public class JsonRpcOutputFilter extends FilterOutputStream  {
 	private static final String UTF8 = "UTF-8";
 	private static final String CRLF = "\r\n";
 	private static final String CONTENT_LENGTH_HEADER = "Content-Length:";
+	private static final String VLS_CONFIG_FILE = "volar-config.json"; // "vetur-config.json"
 
-	private JSONObject config = null;
+	private JSONObject initOptions = null;
 	
 	private boolean DEBUG = Boolean.parseBoolean(System.getProperty("vue4e.debug")); //$NON-NLS-1$
 	// input
@@ -41,10 +43,13 @@ public class JsonRpcOutputFilter extends FilterOutputStream  {
 		super(out);
 		
 		String s;
-		InputStream is = this.getClass().getClassLoader().getResourceAsStream("vetur-config.json");
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream(VLS_CONFIG_FILE);
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(is, UTF8))) {
 			s = br.lines().collect(Collectors.joining(System.lineSeparator()));
-			config = new JSONObject(s);
+			initOptions = new JSONObject(s);
+			initOptions.getJSONObject("typescript").put("tsdk", Vue4ePlugin.getDefault().getPluginDir()
+          .append(ConnectionProvider.SERVER_PATH + ConnectionProvider.NODE_MODULES_PATH + "/typescript/lib")
+          .toOSString());
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -165,30 +170,28 @@ public class JsonRpcOutputFilter extends FilterOutputStream  {
 
 		JSONObject o = new JSONObject(in.toString());
 		
-		String method = o.getString("method");
-		if(method.equals("initialize")) {
-			// method=initialize --> params.initializationOptions.config must be given
-			// Since vetur likes to run in a VSCode environment we must provide it with some default config options
-			// that are always present in VSCode. 
-			JSONObject params = o.getJSONObject("params");
-			if(params.opt("initializationOptions") == null) {
-				params.put("initializationOptions", new JSONObject());
-			}
-			params.getJSONObject("initializationOptions").put("config", config);
-			
-			//params.put("clientInfo", new JSONObject("{\"name\":\"vue4e\", \"version\":\"0.1.0\"}"));
+		if(o.has("method")) {
+  		String method = o.getString("method");
+  		if(method.equals("initialize")) {
+  			// method=initialize --> params.initializationOptions.config must be given
+  			// Since vetur likes to run in a VSCode environment we must provide it with some default config options
+  			// that are always present in VSCode. 
+  			JSONObject params = o.getJSONObject("params");
+  			if(params.opt("initializationOptions") == null) {
+  				params.put("initializationOptions", initOptions);
+  			}
+  			
+  			//params.put("clientInfo", new JSONObject("{\"name\":\"vue4e\", \"version\":\"0.1.0\"}"));
+  		}
+  
+  		// TODO: handle errors & restart server
 		}
-
-		// TODO: handle errors & restart server
-
-		// {"jsonrpc":"2.0","id":"51","error":{"code":-32603,"message":"Request shutdown failed with message: Cannot read property 'languageServiceRefCount' of undefined"}}Content-Length: 47
-
-		
+  	
 		String s = o.toString();
-		if(DEBUG) {
-			System.out.println("After Parse:  " + s);
-		}
-		
+  	if(DEBUG) {
+  		System.out.println("After Parse:  " + s);
+  	}
+    		
 		write(CONTENT_LENGTH_HEADER + " " + Integer.toString(s.length()) + CRLF);
 		write(CRLF);
 		write(s);

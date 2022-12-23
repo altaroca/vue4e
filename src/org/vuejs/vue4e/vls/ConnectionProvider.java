@@ -17,15 +17,25 @@ public class ConnectionProvider implements StreamConnectionProvider {
 
 	private boolean DEBUG = Boolean.parseBoolean(System.getProperty("vue4e.debug")); //$NON-NLS-1$
 
-	private final String NPM_COMMAND = "npm";
-	private final String SERVER_PATH = "/server";
-	private final String NODE_MODULES_PATH = "/node_modules";
-	private final String VLS_LOCATION = "/vue-language-server/bin";
-	private final String VLS_COMMAND = "vls";
-	private final String WIN_CMD_EXTENSION = ".cmd";  // extension .cmd only needed for Windows
-	private final String VLS_NODE_MODULE = "vue-language-server";
-	private final String INPUT_PREFIX = "[IN]  ";
-	private final String OUTPUT_PREFIX = "[OUT] ";
+	private final  static String NPM_COMMAND = "npm";
+	protected final static String SERVER_PATH = "/server";
+	protected final  static String NODE_MODULES_PATH = "/node_modules";
+	// vetur:
+  // private final static String VLS_NODE_MODULE = "vls";  // OLD "vue-language-server";
+  // private final static String VLS_LOCATION = "/" + VLS_NODE_MODULE + "/bin";
+	// private final static String VLS_COMMAND = "vls";
+  // volar: 
+  private final static String VLS_NODE_MODULE = "@volar/vue-language-server";  // OLD "vue-language-server";
+  private final static String VLS_LOCATION = "/" + VLS_NODE_MODULE + "/bin";
+  private final static String VLS_COMMAND = "vue-language-server.js";
+  private final static String VLS_ARGUMENTS = "--stdio";
+	private final static String WIN_CMD_EXTENSION = ""; // ".cmd";  // extension .cmd only needed for Windows
+	private final static String INPUT_PREFIX = "[IN]  ";
+	private final static String OUTPUT_PREFIX = "[OUT] ";
+	
+	// BUG:  vue-language-server does not work any more (missing dependency)
+	//       and our JsonRPC parser does not work with the newer vls (scrambled text)
+	//       and vls gives error "Unhandled method textDocument/documentColor"
 	
 	private VlsServer server = null;
 
@@ -130,6 +140,7 @@ public class ConnectionProvider implements StreamConnectionProvider {
 	public OutputStream getOutputStream() {
 		if(server == null) return null;
 		OutputStream os = new JsonRpcOutputFilter(server.getOutputStream());
+		//OutputStream os = server.getOutputStream();
 		if (DEBUG) {
 			return new FilterOutputStream(os) {
 				
@@ -282,7 +293,7 @@ public class ConnectionProvider implements StreamConnectionProvider {
     	if(vlsCmd == null) {
     		try {
 					vlsCmd = Vue4ePlugin.getDefault().getPluginDir()
-								.append(SERVER_PATH + NODE_MODULES_PATH + VLS_LOCATION + "/" + VLS_COMMAND)
+								.append(SERVER_PATH + NODE_MODULES_PATH + VLS_LOCATION + "/" + VLS_COMMAND + " " + VLS_ARGUMENTS)
 								.toOSString();
 	    			if(Vue4ePlugin.isWindowsPlatform()) {
 	    				vlsCmd += WIN_CMD_EXTENSION;

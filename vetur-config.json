@@ -1,82 +1,84 @@
 {
-  "html": {
-  	"suggest": {
-  		"html5" : true
-  	}
-  },
-  "javascript": {
-  	"suggest": {
-  		"autoImports" : false
-  	}
-  },
-  "typescript": {
-  	"suggest": {
-  		"autoImports" : false
-  	}
-  },
-  "vetur" : {
-	"useWorkspaceDependencies": false,
-	"completion": {
-		"autoImport": true,
-		"scaffoldSnippetSources": {},
-		"tagCasing": "kebab"
-	},
-	"grammar": {
-		"customBlocks" : {
-            "docs": "md",
-            "i18n": "json"
-        }
-	},
-	"validation": {
-		"template": true,
-		"style": true,
-		"script": true
-	},
-	"format": {
-		"enable": true,
-		"options": {
-			"tabSize": 2,
-			"useTabs": false
-		},
-		"defaultFormatter": {
-			"html": "prettyhtml",
-			"css": "prettier",
-            "postcss": "prettier",
-            "scss": "prettier",
-            "less": "prettier",
-            "stylus": "stylus-supremacy",
-            "js": "prettier",
-            "ts": "prettier"		
-		},
-		"defaultFormatterOptions": {
-			"prettier" : {},
-			"prettyhtml" : {},
-			"js-beautify-html": {},
-		    "default": {
-              "js-beautify-html": {
-                 "wrap_attributes": "force-expand-multiline"
-              },
-              "prettyhtml": {
-                "printWidth": 100,
-                "singleQuote": false,
-                "wrapAttributes": false,
-                "sortAttributes": false
-              }
+  "config": {
+    "html": {
+    	"suggest": {
+    		"html5" : true
+    	}
+    },
+    "javascript": {
+    	"suggest": {
+    		"autoImports" : false
+    	}
+    },
+    "typescript": {
+    	"suggest": {
+    		"autoImports" : false
+    	}
+    },
+    "vetur" : {
+    	"useWorkspaceDependencies": false,
+    	"completion": {
+    		"autoImport": true,
+    		"scaffoldSnippetSources": {},
+    		"tagCasing": "kebab"
+    	},
+    	"grammar": {
+    		"customBlocks" : {
+                "docs": "md",
+                "i18n": "json"
             }
-        },
-        "styleInitialIndent": false,
-        "scriptInitialIndent": false 
-	},
-	"trace": {
-	    "server": "verbose"
-	},
-	"dev": {
-		"vlsPath": "",
-		"vlsPort": 8000,
-		"logLevel": "DEBUG"
-	},
-	"experimental": {
-		"templateInterpolationService": false
-	}
+    	},
+    	"validation": {
+    		"template": true,
+    		"style": true,
+    		"script": true
+    	},
+    	"format": {
+    		"enable": true,
+    		"options": {
+    			"tabSize": 2,
+    			"useTabs": false
+    		},
+    		"defaultFormatter": {
+    			"html": "prettyhtml",
+    			"css": "prettier",
+                "postcss": "prettier",
+                "scss": "prettier",
+                "less": "prettier",
+                "stylus": "stylus-supremacy",
+                "js": "prettier",
+                "ts": "prettier"		
+    		},
+    		"defaultFormatterOptions": {
+    			"prettier" : {},
+    			"prettyhtml" : {},
+    			"js-beautify-html": {},
+    		    "default": {
+                  "js-beautify-html": {
+                     "wrap_attributes": "force-expand-multiline"
+                  },
+                  "prettyhtml": {
+                    "printWidth": 100,
+                    "singleQuote": false,
+                    "wrapAttributes": false,
+                    "sortAttributes": false
+                  }
+                }
+            },
+            "styleInitialIndent": false,
+            "scriptInitialIndent": false 
+    	},
+    	"trace": {
+    	    "server": "verbose"
+    	},
+    	"dev": {
+    		"vlsPath": "",
+    		"vlsPort": 8000,
+    		"logLevel": "DEBUG"
+    	},
+    	"experimental": {
+    		"templateInterpolationService": false
+    	}
+    }
   }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-	<editor
+	<!-- editor
       name="Vue SFC Editor"
       class="org.vuejs.vue4e.editor.VueSfcEditor"
       id="org.vuejs.vue4e.editor.VueSfcEditor">
    </editor>
-   <!-- extension
+   <extension
 	  point="org.eclipse.core.filebuffers.documentSetup"
 	  id="org.vuejs.vue4e.editor.VueSfcSetupParticipant"
 	  name="VueSfcSetupParticipantName">
@@ -54,10 +54,9 @@
       <server id="org.vuejs.vls" label="Vue language server" class="org.vuejs.vue4e.vls.ConnectionProvider" />
       <contentTypeMapping id="org.vuejs.vls" contentType="lng.vue"/>   
    </extension>
-   <extension
-         id="org.vuejs.vue4e.VLSCommandHandler"
-         class="org.vuejs.vue4e.VLSCommandHandler"
-         point="org.eclipse.ui.handlers">
+   <extension point="org.eclipse.ui.handlers"
+         id="org.vuejs.vue4e.VLSCommandHandler">
+     <handler class="org.vuejs.vue4e.VLSCommandHandler" commandId="test" />
    </extension>
 
 </plugin>
