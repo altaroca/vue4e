@@ -15,7 +15,7 @@ import org.vuejs.vue4e.Vue4ePlugin;
 
 /**
  * Passes on messages from eclipse to VLS.
- * Does some changes to messages.
+ * Applies some changes to messages.
  *
  */
 public class JsonRpcOutputFilter extends FilterOutputStream  {
@@ -23,7 +23,7 @@ public class JsonRpcOutputFilter extends FilterOutputStream  {
 	private static final String UTF8 = "UTF-8";
 	private static final String CRLF = "\r\n";
 	private static final String CONTENT_LENGTH_HEADER = "Content-Length:";
-	private static final String VLS_CONFIG_FILE = "volar-config.json"; // "vetur-config.json"
+	private static final String VLS_CONFIG_FILE = "resources/volar-config.json"; // "vetur-config.json"
 
 	private JSONObject initOptions = null;
 	
@@ -116,7 +116,7 @@ public class JsonRpcOutputFilter extends FilterOutputStream  {
 					else {
 						// unknown header. append to output
 						if(s.trim().isEmpty()) {
-							// we should end the headers once we see an empty header (CRLF only)
+							// we should end the headers once we see an empty line (CRLF only)
 							bHeader = false;
 						}
 						else {
@@ -174,7 +174,7 @@ public class JsonRpcOutputFilter extends FilterOutputStream  {
   		String method = o.getString("method");
   		if(method.equals("initialize")) {
   			// method=initialize --> params.initializationOptions.config must be given
-  			// Since vetur likes to run in a VSCode environment we must provide it with some default config options
+  			// Since vetur/volar likes to run in a VSCode environment we must provide it with some default config options
   			// that are always present in VSCode. 
   			JSONObject params = o.getJSONObject("params");
   			if(params.opt("initializationOptions") == null) {
@@ -191,7 +191,8 @@ public class JsonRpcOutputFilter extends FilterOutputStream  {
   	if(DEBUG) {
   		System.out.println("After Parse:  " + s);
   	}
-    		
+    
+  	// make sure to always include a Content-Length header
 		write(CONTENT_LENGTH_HEADER + " " + Integer.toString(s.length()) + CRLF);
 		write(CRLF);
 		write(s);

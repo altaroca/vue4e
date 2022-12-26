@@ -1,0 +1,15 @@
+{
+  "typescript": {
+    "tsdk": "node_modules/typescript/lib"
+  },
+  "petiteVue": {
+    "processHtmlFile": false
+  },
+  "vitePress": {
+    "processMdFile": false
+  },
+  "json": {
+    "customBlockSchemaUrls": {}
+  },
+  "additionalExtensions": []
+}

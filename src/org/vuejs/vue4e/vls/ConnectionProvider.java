@@ -25,11 +25,11 @@ public class ConnectionProvider implements StreamConnectionProvider {
   // private final static String VLS_LOCATION = "/" + VLS_NODE_MODULE + "/bin";
 	// private final static String VLS_COMMAND = "vls";
   // volar: 
-  private final static String VLS_NODE_MODULE = "@volar/vue-language-server";  // OLD "vue-language-server";
+  private final static String VLS_NODE_MODULE = "@volar/vue-language-server";
   private final static String VLS_LOCATION = "/" + VLS_NODE_MODULE + "/bin";
   private final static String VLS_COMMAND = "vue-language-server.js";
   private final static String VLS_ARGUMENTS = "--stdio";
-	private final static String WIN_CMD_EXTENSION = ""; // ".cmd";  // extension .cmd only needed for Windows
+	private final static String WIN_CMD_EXTENSION = ".cmd";  // extension .cmd only needed for Windows
 	private final static String INPUT_PREFIX = "[IN]  ";
 	private final static String OUTPUT_PREFIX = "[OUT] ";
 	
@@ -140,7 +140,6 @@ public class ConnectionProvider implements StreamConnectionProvider {
 	public OutputStream getOutputStream() {
 		if(server == null) return null;
 		OutputStream os = new JsonRpcOutputFilter(server.getOutputStream());
-		//OutputStream os = server.getOutputStream();
 		if (DEBUG) {
 			return new FilterOutputStream(os) {
 				
@@ -295,7 +294,7 @@ public class ConnectionProvider implements StreamConnectionProvider {
 					vlsCmd = Vue4ePlugin.getDefault().getPluginDir()
 								.append(SERVER_PATH + NODE_MODULES_PATH + VLS_LOCATION + "/" + VLS_COMMAND + " " + VLS_ARGUMENTS)
 								.toOSString();
-	    			if(Vue4ePlugin.isWindowsPlatform()) {
+	    			if(Vue4ePlugin.isWindowsPlatform() && !VLS_COMMAND.contains(".")) {
 	    				vlsCmd += WIN_CMD_EXTENSION;
 	    			}
 				} catch (IOException e) {
@@ -342,8 +341,7 @@ public class ConnectionProvider implements StreamConnectionProvider {
 	    					Vue4ePlugin.getDefault().getBundle().getSymbolicName(),
 	    					"Installing VLS server"));
 
-	    			// global install needs 'sudo' etc on unix
-	    			// --> install in workspace
+	    			// global install needs 'sudo' etc on unix --> install into workspace
 	    			
 	    			IPath pathServer;
 	    			try {
